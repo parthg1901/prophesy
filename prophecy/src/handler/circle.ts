@@ -11,15 +11,25 @@ export async function handler(context: HandlerContext) {
   try {
     let type = params.type;
     console.log(type)
-    if (type === "signout") {
-        await context.reply("User signed out.");
-        return;
-    } else if (type === "signup") {
-        
+    console.log(params)
+    console.log(sender)
+    if (type === "signin") {
+        await signin(sender.address);
+
         await context.reply("User signed up.");
         return;
-    } else if (type === "login") {
-        await context.reply("User logged in.");
+    } else if (type === "wallet") {
+        await createWallet(sender.address, params.blockchain);
+
+        await context.reply("Wallet created.");
+        return;
+    } else if (type === "list") {
+        const wallets = await listWallets(sender.address);
+        await context.reply("Your Wallets -")
+        Promise.all(wallets.wallets.map(async (wallet: any) => {
+          await context.reply(wallet.address + " " + wallet.blockchain)
+        }))
+        // await context.reply("Wallets listed.");
         return;
     }
   } catch (error) {
@@ -27,14 +37,35 @@ export async function handler(context: HandlerContext) {
     await context.reply("An error occurred while processing your request.");
   }
 }
-
-function signout() {
-    // signout logic
+async function signin(wallet: string) {
+    const res = await fetch("http://localhost:8080/signin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ wallet })
+    })
+    console.log(await res.json())
 }
 
-function login(email: string, password: string) {
-    // login logic
+async function createWallet(wallet: string, blockchain: string) {
+    const res = await fetch("http://localhost:8080/wallets", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ wallet,  blockchain: blockchain.toUpperCase()})
+    })
+    console.log(await res.json())
 }
-function signup(email: string, password: string) {
-    // signup logic
+
+async function listWallets(wallet: string) {
+  console.log(wallet)
+    const res = await fetch(`http://localhost:8080/wallets?wallet=${encodeURIComponent(wallet)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    return await res.json() as any
 }

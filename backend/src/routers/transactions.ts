@@ -1,6 +1,5 @@
 import express from 'express';
 import {
-  authMiddleware,
   contractExecutionTransactionSchema,
   estimateContractExecutionTransactionSchema,
   estimateTransferTokensSchema,
@@ -22,8 +21,6 @@ import {
 
 const transactions = express.Router();
 
-const authTransRouter = express.Router();
-authTransRouter.use(authMiddleware);
 
 /**
  * GET - /transactions
@@ -65,7 +62,7 @@ authTransRouter.use(authMiddleware);
  *                                https://developers.circle.com/w3s/reference/listtransactions
  *
  */
-authTransRouter.get('/', validate(listTransactionsSchema), listTransactions);
+transactions.get('/', validate(listTransactionsSchema), listTransactions);
 
 /**
  * GET - /transactions/:id
@@ -81,7 +78,7 @@ authTransRouter.get('/', validate(listTransactionsSchema), listTransactions);
  *                                    https://developers.circle.com/w3s/reference/gettransaction
  *
  */
-authTransRouter.get('/:id', validate(getTransactionSchema), getTransaction);
+transactions.get('/:id', validate(getTransactionSchema), getTransaction);
 
 /**
  * POST - /transactions/transfer
@@ -118,7 +115,7 @@ authTransRouter.get('/:id', validate(getTransactionSchema), getTransaction);
  *  challengeId: string - used to initiate a challenge flow
  *
  */
-authTransRouter.post(
+transactions.post(
   '/transfer',
   validate(transferTokensSchema),
   createTransaction
@@ -143,20 +140,20 @@ authTransRouter.post(
  *                               https://developers.circle.com/w3s/reference/createtransferestimatefee
  *
  */
-authTransRouter.post(
+transactions.post(
   '/transfer/estimateFee',
   validate(estimateTransferTokensSchema),
   estimateTransferFee
 );
 
 
-authTransRouter.post(
+transactions.post(
   '/contract',
   validate(contractExecutionTransactionSchema),
   createContractExecutionTransaction
 )
 
-authTransRouter.post(
+transactions.post(
   '/contract/estimateFee',
   validate(estimateContractExecutionTransactionSchema),
   estimateContractExecutionFees
@@ -180,4 +177,4 @@ transactions.post(
   validateAddress
 );
 
-export { transactions, authTransRouter };
+export { transactions };

@@ -4,6 +4,8 @@ import { handler as transaction } from "./handler/transaction.js";
 import { handler as games } from "./handler/game.js";
 import { handler as loyalty } from "./handler/loyalty.js";
 import { handler as circle } from "./handler/circle.js";
+import { handler as prompt } from "./handler/prompt.js";
+import { handler as handleMembers } from "./handler/members.js";
 import { helpHandler } from "./index.js";
 import type { SkillGroup } from "@xmtp/message-kit";
 
@@ -33,32 +35,69 @@ export const skills: SkillGroup[] = [
     ],
   },
   {
+    name: "Members",
+    description: "Manage subscribers.",
+    skills: [{
+      command: "/subscribe",
+      triggers: ["/subscribe"],
+      handler: handleMembers,
+      examples: ["/subscribe"],
+      description: "Subscribe to updates.",
+      params: {},
+    },
+    {
+      command: "/unsubscribe",
+      triggers: ["/unsubscribe"],
+      handler: handleMembers,
+      examples: ["/unsubscribe"],
+      description: "Unsubscribe from updates.",
+      params: {},
+    }
+  ],
+  },
+  {
     name: "Auth",
     description: "Auth using circle sdk",
     skills: [
       {
-        command: "/auth [type] [email] [password]",
+        command: "/auth [type] [blockchain]",
         triggers: ["/auth"],
-        examples: ["/auth login hello@123.com 1234@1234"],
+        examples: ["/auth signin", "/auth wallet AVAX-FUJI", "/auth list"],
         description: "Auth using circle sdk",
         handler: circle,
         params: {
           type: {
-            default: "login",
-            type: "string",
-            values: ["login", "signup", "signout"],
-          },
-          email: {
             default: "",
             type: "string",
+            values: ["signin", "wallet", "list"],
           },
-          password: {
+          blockchain: {
             default: "",
             type: "string",
+            values: ["eth-sepolia", "avax-fuji", "matic-amoy", "sol-devnet", "arb-sepolia","near-testnet", "evm-testnet"],
           }
         },
       }
     ]
+  },
+  {
+    name: "Prompt",
+    description: "Prompt the bot to generate a story prompt.",
+    skills: [
+      {
+        command: "/prompt [prompt]",
+        triggers: ["/prompt"],
+        examples: ["/prompt Tell me a story about a dragon."],
+        description: "Generate a story prompt.",
+        handler: prompt,
+        params: {
+          prompt: {
+            default: "",
+            type: "prompt",
+          },
+        },
+      },
+    ],
   },
   {
     name: "Transactions",

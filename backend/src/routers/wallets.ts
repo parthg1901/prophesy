@@ -7,7 +7,6 @@ import {
   createWallet
 } from '../controllers/wallets';
 import {
-  authMiddleware,
   createWalletSchema,
   createWalletSetSchema,
   getWalletSchema,
@@ -17,17 +16,15 @@ import {
 } from '../middleware';
 
 const walletRouter = express.Router();
-const authWalletRouter = express.Router();
-authWalletRouter.use(authMiddleware);
 
-authWalletRouter.get('/', validate(listWalletsSchema), listWallets);
+walletRouter.get('/', validate(listWalletsSchema), listWallets);
 walletRouter.get('/:id', validate(getWalletSchema), getWallet);
-authWalletRouter.post('/', validate(createWalletSchema), createWallet);
-authWalletRouter.post('/set', validate(createWalletSetSchema), createWalletSet);
+walletRouter.post('/', validate(createWalletSchema), createWallet);
+walletRouter.post('/set', validate(createWalletSetSchema), createWalletSet);
 walletRouter.get(
   '/:id/balances',
   validate(walletTokenBalanceSchema),
   getWalletTokenBalance
 );
 
-export { walletRouter, authWalletRouter };
+export { walletRouter };

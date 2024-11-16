@@ -25,7 +25,8 @@ export const listWallets = async (
   next: NextFunction
 ) => {
   try {
-    const user = await Users.findById(req.headers.user);
+    const user = await Users.findOne({wallet: req.query.wallet});
+    console.log(req.params.wallet)
     if (!user) {
       res.status(401).json({ error: 'Request is not authorized' });
       return;
@@ -77,7 +78,8 @@ export const createWallet = async (
   next: NextFunction
 ) => {
   try {
-    const user = await Users.findById(req.headers.user);
+    const user = await Users.findOne({wallet: req.body.wallet});
+
     if (!user) {
       res.status(401).json({ error: 'Request is not authorized' });
       return;

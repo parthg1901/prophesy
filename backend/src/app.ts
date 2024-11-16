@@ -5,9 +5,6 @@ import { errorHandler } from './middleware';
 import * as dotenv from 'dotenv';
 import path from 'path';
 import {
-  authTransRouter,
-  authWalletRouter,
-  authUsers,
   faucet,
   tokens,
   transactions,
@@ -34,10 +31,10 @@ app.get('/ping', (_req: Request, res: Response) => {
   res.status(200).send('pong');
 });
 
-app.use('/', users, authUsers);
-app.use('/wallets', walletRouter, authWalletRouter);
+app.use('/', users);
+app.use('/wallets', walletRouter);
 app.use('/faucet', faucet);
-app.use('/transactions', transactions, authTransRouter);
+app.use('/transactions', transactions);
 app.use('/tokens', tokens);
 
 // Error handling

@@ -87,6 +87,7 @@ export async function textGeneration(
       content: systemPrompt,
     });
   }
+  console.log(userPrompt)
   messages.push({
     role: "user",
     content: userPrompt,

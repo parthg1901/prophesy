@@ -1,21 +1,10 @@
 import * as yup from 'yup';
 
 // User
-export const signupSchema = yup.object({
+export const signinSchema = yup.object({
   body: yup
     .object({
-      email: yup.string().email().required(),
-      password: yup.string().required()
-    })
-    .noUnknown(true)
-    .strict()
-});
-
-export const loginSchema = yup.object({
-  body: yup
-    .object({
-      email: yup.string().email().required(),
-      password: yup.string().required()
+      wallet: yup.string().required(),
     })
     .noUnknown(true)
     .strict()
@@ -50,9 +39,9 @@ export const listWalletsSchema = yup.object({
     .object({
       address: yup.string().optional(),
       blockchain: yup.string().optional(),
-      walletSetId: yup.string().optional(),
       refId: yup.string().optional(),
       from: yup.date().optional(),
+      wallet: yup.string().required(),
       to: yup.date().optional(),
       pageBefore: yup.string().optional(),
       pageAfter: yup.string().optional(),
@@ -84,6 +73,7 @@ export const createWalletSchema = yup.object({
   body: yup
     .object({
       blockchain: yup.string().required(),
+      wallet: yup.string().required(),
     })
     .noUnknown(true)
     .strict()

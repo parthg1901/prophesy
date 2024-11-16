@@ -8,25 +8,19 @@ const Schema = mongoose.Schema;
 
 interface IUser {
   _id: string;
-  email: string;
-  password: string;
+  wallet: string
   walletSet: string;
 }
 
 interface UserModel extends Model<IUser> {
-  signup(email: string, password: string): Promise<IUser>;
-  login(email: string, password: string): Promise<IUser>;
+  signin(wallet: string): Promise<IUser>;
 }
 
 const userSchema = new Schema<IUser, UserModel>({
-  email: {
+  wallet: {
     type: String,
     required: true,
     unique: true
-  },
-  password: {
-    type: String,
-    required: true
   },
   walletSet: {
     type: String,
@@ -36,26 +30,18 @@ const userSchema = new Schema<IUser, UserModel>({
 });
 
 // static signup method
-userSchema.statics.signup = async function (email: string, password: string) {
+userSchema.statics.signin = async function (wallet: string) {
   // validation
-  if (!email || !password) {
-    throw Error('All fields must be filled');
-  }
-  if (!validator.isEmail(email)) {
-    throw Error('Email not valid');
-  }
-  const exists = await this.findOne({ email });
+  const exists = await this.findOne({ wallet });
 
   if (exists) {
-    throw Error('Email already in use');
+    return exists;
   }
 
-  const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(password, salt);
   try {
     const response = await circleDevSdk.createWalletSet({
       idempotencyKey: randomUUID(),
-      name: email
+      name: wallet
     });
     await circleDevSdk.createWallets({
       idempotencyKey: randomUUID(),
@@ -65,35 +51,17 @@ userSchema.statics.signup = async function (email: string, password: string) {
       accountType: "SCA"
     })
     const user = await this.create({
-      email,
-      password: hash,
+      wallet,
       walletSet: response.data?.walletSet.id
     });
   
     return user;
 
   } catch (error) {
+    console.log(error)
     throw Error('Error creating wallet set');
   }
 };
 
-// static login method
-userSchema.statics.login = async function (email: string, password: string) {
-  if (!email || !password) {
-    throw Error('All fields must be filled');
-  }
-
-  const user = await this.findOne({ email });
-  if (!user) {
-    throw Error('Incorrect email');
-  }
-
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) {
-    throw Error('Incorrect password');
-  }
-
-  return user;
-};
 
 export default mongoose.model<IUser, UserModel>('User', userSchema);

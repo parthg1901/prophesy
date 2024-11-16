@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "dotenv/config.js";
 import { HandlerContext } from "@xmtp/message-kit";
 import {
   updateRecordById,

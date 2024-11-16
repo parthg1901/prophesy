@@ -15,6 +15,7 @@ export const dripFaucet = async (
 
     res.status(200).send();
   } catch (error: unknown) {
+    console.log(error)
     next(error);
   }
 };

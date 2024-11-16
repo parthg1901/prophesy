@@ -4,7 +4,7 @@ export async function handler(context: HandlerContext) {
   const {
     message: {
       sender,
-      content: { params },
+      content: { params, content },
     },
   } = context;
 
@@ -13,6 +13,7 @@ export async function handler(context: HandlerContext) {
     console.log(type)
     console.log(params)
     console.log(sender)
+    console.log(content)
     if (type === "signin") {
         await signin(sender.address);
 
@@ -31,6 +32,13 @@ export async function handler(context: HandlerContext) {
         }))
         // await context.reply("Wallets listed.");
         return;
+    } 
+    if (content.split(" ")[0] === "/faucet") {
+        await faucet(params.to, params.blockchain);
+
+        await context.reply("Done.");
+        return; 
+
     }
   } catch (error) {
     console.error("Error during Circle call:", error);
@@ -68,4 +76,14 @@ async function listWallets(wallet: string) {
       },
     })
     return await res.json() as any
+}
+
+async function faucet(wallet: string, blockchain: string) {
+    const res = await fetch("http://localhost:8080/faucet/drips", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ address: wallet, blockchain: blockchain.toUpperCase() })
+    })
 }

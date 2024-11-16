@@ -81,6 +81,30 @@ export const skills: SkillGroup[] = [
     ]
   },
   {
+    name: "Circle",
+    description: "Manage circle sdk",
+    skills: [
+      {
+        command: "/faucet [to] [blockchain]",
+        triggers: ["/faucet"],
+        examples: ["/faucet 0x1234 eth-sepolia"],
+        description: "Faucet using circle sdk",
+        handler: circle,
+        params: {
+          to: {
+            default: "",
+            type: "string",
+          },
+          blockchain: {
+            default: "",
+            type: "string",
+            values: ["eth-sepolia", "avax-fuji", "matic-amoy", "sol-devnet", "arb-sepolia","near-testnet", "evm-testnet"],
+          }
+        },
+      }
+    ]
+  },
+  {
     name: "Prompt",
     description: "Prompt the bot to generate a story prompt.",
     skills: [

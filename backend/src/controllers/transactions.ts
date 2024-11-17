@@ -23,6 +23,7 @@ export const createTransaction = async (
   res: Response,
   next: NextFunction
 ) => {
+  console.log(req.body)
   try {
     const feeConfig = getFeeConfiguration(req);
     if (!feeConfig) {
@@ -41,6 +42,7 @@ export const createTransaction = async (
     });
     res.status(200).send(response.data);
   } catch (error: unknown) {
+    console.log(error)
     next(error);
   }
 };

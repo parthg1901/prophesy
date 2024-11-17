@@ -28,7 +28,7 @@ export async function handler(context: HandlerContext) {
         const wallets = await listWallets(sender.address);
         await context.reply("Your Wallets -")
         Promise.all(wallets.wallets.map(async (wallet: any) => {
-          await context.reply(wallet.address + " " + wallet.blockchain)
+          await context.reply(wallet.address + " " + wallet.blockchain + " " + wallet.id) 
         }))
         // await context.reply("Wallets listed.");
         return;
@@ -38,7 +38,10 @@ export async function handler(context: HandlerContext) {
 
         await context.reply("Done.");
         return; 
-
+    } else if (content.split(" "[0] === "/transferusdc")) {
+      await transerUSDC(params.from, params.to, params.amount);
+      await context.reply("Transaction Sent");
+      return;
     }
   } catch (error) {
     console.error("Error during Circle call:", error);
@@ -86,4 +89,27 @@ async function faucet(wallet: string, blockchain: string) {
       },
       body: JSON.stringify({ address: wallet, blockchain: blockchain.toUpperCase() })
     })
+}
+
+async function transerUSDC(from: string, to: string, amount: number) {
+  const token = (await getWalletBalance(from) as any).tokenBalances[0]
+    const res = await fetch("http://localhost:8080/transactions/transfer", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ walletId: from, destinationAddress: to, amount, feeLevel: "MEDIUM", tokenId: token.token.id })
+    })
+}
+
+async function getWalletBalance(wallet: string) {
+    const res = await fetch(`http://localhost:8080/wallets/${wallet}/balances`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    const responseBody = await res.json();
+console.log(responseBody);
+return responseBody;
 }

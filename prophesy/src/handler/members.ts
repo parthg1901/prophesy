@@ -7,6 +7,7 @@ import {
 } from "../lib/lowdb.js";
 
 import { SkillResponse } from "@xmtp/message-kit";
+import { ethers } from "ethers";
 
 const groupId = process.env.GROUP_ID as string;
 export async function handler(
@@ -14,12 +15,10 @@ export async function handler(
 ): Promise<SkillResponse | undefined> {
   const {
     message: {
-      content: { skill, content },
+      content: { skill,content: text, params },
       sender,
-    },
-  } = context;
-console.log(content)
-
+    }} = context;
+    let content = text.split(" ")[0];
  if (content === "/unsubscribe") {
     const subscriber = await getRecordByField(
       "subscribers",
@@ -52,14 +51,17 @@ console.log(content)
         code: 200,
         message: "You have been subscribed to updates.",
       };
-    } else {
-        console.log("here")
-      return {
-        code: 400,
-        message: "You are already subscribed to updates.",
-      };
     }
-  }else {
+  } else if (content === "/price"){
+    const priceFeed = "0x732c57f702802fdaf604f8Bd11A8c888F786cc04";
+    const abi = [
+        "function read(string) view returns (uint256, uint256)"
+    ]
+    const contract = new ethers.Contract(priceFeed, abi, new ethers.JsonRpcProvider("https://1rpc.io/sepolia"));
+    const out  = await contract.read(params.pool.toUpperCase())
+    await context.reply("Price: " + out[0].toString() + " " + new Date(parseInt(out[1].toString())*1000))
+
+  } else {
     console.log("here")
     return {
       code: 400,

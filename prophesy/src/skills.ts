@@ -52,6 +52,19 @@ export const skills: SkillGroup[] = [
       examples: ["/unsubscribe"],
       description: "Unsubscribe from updates.",
       params: {},
+    },
+    {
+      command: "/price [pool]",
+      triggers: ["/price"],
+      handler: handleMembers,
+      examples: ["/price ETH_USD"],
+      description: "Get the price of a token.",
+      params: {
+        pool: {
+          default: "ETH_USD",
+          type: "string",
+        },
+      },
     }
   ],
   },
@@ -99,6 +112,27 @@ export const skills: SkillGroup[] = [
             default: "",
             type: "string",
             values: ["eth-sepolia", "avax-fuji", "matic-amoy", "sol-devnet", "arb-sepolia","near-testnet", "evm-testnet"],
+          }
+        },
+      },
+      {
+        command: "/transferusdc [to] [from] [amount]",
+        triggers: ["/transferusdc"],
+        examples: ["/transferusdc 0x1234 0x5678 10"],
+        description: "Transfer USDC using circle sdk",
+        handler: circle,
+        params: {
+          to: {
+            default: "",
+            type: "string",
+          },
+          from: {
+            default: "",
+            type: "string",
+          },
+          amount: {
+            default: 10,
+            type: "number",
           }
         },
       }

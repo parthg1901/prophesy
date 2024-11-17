@@ -13,8 +13,10 @@ export const getWalletTokenBalance = async (
       // Yup validation in the middleware allows the spread of the req.query valid.
       ...req.query
     });
+    console.log(response.data)
     res.status(200).send(response.data);
   } catch (error: unknown) {
+    console.log(error)
     next(error);
   }
 };

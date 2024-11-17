@@ -49,7 +49,7 @@ export async function handler(context: HandlerContext) {
   }
 }
 async function signin(wallet: string) {
-    const res = await fetch("http://localhost:8080/signin", {
+    const res = await fetch("https://prophesy-1.onrender.com/signin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -60,7 +60,7 @@ async function signin(wallet: string) {
 }
 
 async function createWallet(wallet: string, blockchain: string) {
-    const res = await fetch("http://localhost:8080/wallets", {
+    const res = await fetch("https://prophesy-1.onrender.com/wallets", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -72,7 +72,7 @@ async function createWallet(wallet: string, blockchain: string) {
 
 async function listWallets(wallet: string) {
   console.log(wallet)
-    const res = await fetch(`http://localhost:8080/wallets?wallet=${encodeURIComponent(wallet)}`, {
+    const res = await fetch(`https://prophesy-1.onrender.com/wallets?wallet=${encodeURIComponent(wallet)}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -82,7 +82,7 @@ async function listWallets(wallet: string) {
 }
 
 async function faucet(wallet: string, blockchain: string) {
-    const res = await fetch("http://localhost:8080/faucet/drips", {
+    const res = await fetch("https://prophesy-1.onrender.com/faucet/drips", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -93,7 +93,7 @@ async function faucet(wallet: string, blockchain: string) {
 
 async function transerUSDC(from: string, to: string, amount: number) {
   const token = (await getWalletBalance(from) as any).tokenBalances[0]
-    const res = await fetch("http://localhost:8080/transactions/transfer", {
+    const res = await fetch("https://prophesy-1.onrender.com/transactions/transfer", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -103,7 +103,7 @@ async function transerUSDC(from: string, to: string, amount: number) {
 }
 
 async function getWalletBalance(wallet: string) {
-    const res = await fetch(`http://localhost:8080/wallets/${wallet}/balances`, {
+    const res = await fetch(`https://prophesy-1.onrender.com/wallets/${wallet}/balances`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -10,6 +10,14 @@ Circle - Used for creating Dev Controlled Wallets across various chains to allow
     Please feel free to play around [router](backend/src/routers/index.ts)
     - Detailed API Reference coming soon.
 Chronicle Protocol - Used to provide price updates along with the time of last update to the users. (Subscription based/Custom Calls)
+
+## Setup
+The Dev Wallets Server is running at https://prophesy-1.onrender.com
+1. cd prophesy
+2. Create .env file
+3. npm run dev
+And you're all set to add this fun chatbot to your group!
+
 ## XMTP Agent Reference
 
 ### **Tipping**  
